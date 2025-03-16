@@ -54,8 +54,8 @@ def play_sound(sound_file):
     except Exception as e:
         print("Ses çalma hatası:", e)
 
-AUTO_MODE_POS = (100, 200)
-TELEOP_MODE_POS = (200, 200)
+AUTO_MODE_POS = (100, 930)
+TELEOP_MODE_POS = (200, 900)
 
 def select_autonomous_mode(conn):
     pyautogui.click(AUTO_MODE_POS[0], AUTO_MODE_POS[1])
