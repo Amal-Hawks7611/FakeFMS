@@ -56,6 +56,7 @@ def play_sound(sound_file):
 
 AUTO_MODE_POS = (100, 930)
 TELEOP_MODE_POS = (200, 900)
+ENABLE_BUTTON_POS = (400, 900)
 
 def select_autonomous_mode(conn):
     pyautogui.click(AUTO_MODE_POS[0], AUTO_MODE_POS[1])
@@ -66,8 +67,7 @@ def select_teleoperated_mode(conn):
     print("Teleop mod seçildi.")
 
 def enable_robot(conn, current_mode):
-    pyautogui.press(']')
-    pyautogui.press('\\')
+    pyautogui.click(ENABLE_BUTTON_POS[0],ENABLE_BUTTON_POS[1])
     print("Robot Enabled")
     
 def disable_robot(conn, current_mode):
@@ -123,7 +123,7 @@ def run_phase(conn, mode, duration, multipliers, last30_sound=False):
         minutes = remaining // 60
         seconds = remaining % 60
         timer_label.config(text=f"Kalan Süre: {minutes}:{seconds:02d}")
-        if last30_sound and remaining <= 30 and not played_last_30:
+        if last30_sound and remaining <= 20 and not played_last_30:
             played_last_30 = True
             threading.Thread(target=play_sound, args=("sounds/last-30.mp3",)).start()
         if remaining > 0:
@@ -143,9 +143,9 @@ if __name__ == "__main__":
     conn = init_db()
     current_mode = "Autonomous"
     select_autonomous_mode(conn)
-    time.sleep(1)
     play_sound("sounds/match_start.mp3")
     enable_robot(conn, current_mode)
+    time.sleep(1)
     scores_auto, total_auto = run_phase(conn, current_mode, duration=15, multipliers={
         "L1": 3,
         "L2": 4,
@@ -157,9 +157,9 @@ if __name__ == "__main__":
     time.sleep(1)
     current_mode = "Teleop"
     select_teleoperated_mode(conn)
-    time.sleep(1)
     play_sound("sounds/teleop_enabled.mp3")
     enable_robot(conn, current_mode)
+    time.sleep(1)
     scores_teleop, total_teleop = run_phase(conn, current_mode, duration=135, multipliers={
         "L1": 2,
         "L2": 3,
