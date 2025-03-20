@@ -54,28 +54,23 @@ def play_sound(sound_file):
     except Exception as e:
         print("Ses çalma hatası:", e)
 
-AUTO_MODE_POS = (100, 930)
-TELEOP_MODE_POS = (200, 900)
-ENABLE_BUTTON_POS = (400, 900)
+AUTO_MODE_POS = (150, 840)
+TELEOP_MODE_POS = (150, 810)
+ENABLE_BUTTON_POS = (120, 970)
 
 def select_autonomous_mode(conn):
-    pyautogui.click(AUTO_MODE_POS[0], AUTO_MODE_POS[1])
     print("Otonom mod seçildi.")
 
 def select_teleoperated_mode(conn):
-    pyautogui.click(TELEOP_MODE_POS[0], TELEOP_MODE_POS[1])
     print("Teleop mod seçildi.")
 
 def enable_robot(conn, current_mode):
-    pyautogui.click(ENABLE_BUTTON_POS[0],ENABLE_BUTTON_POS[1])
     print("Robot Enabled")
     
 def disable_robot(conn, current_mode):
-    pyautogui.press('enter')
     print("Robot Disabled")
 
 def emergency_stop(conn, current_mode):
-    pyautogui.press('space')
     print("Emergency Stop Activated")
     play_sound("sounds/ENDMATCH.mp3")
 
@@ -132,6 +127,7 @@ def run_phase(conn, mode, duration, multipliers, last30_sound=False):
             disable_robot(conn, mode)
             total = sum(scores[slot] * multipliers[slot] for slot in scores)
             log_phase_result(conn, mode, total, scores)
+            time.sleep(2)
             root.destroy()
             play_sound("sounds/ENDMATCH.mp3")
     update_timer()
@@ -140,6 +136,7 @@ def run_phase(conn, mode, duration, multipliers, last30_sound=False):
     return scores, total
 
 if __name__ == "__main__":
+    time.sleep(0.5)
     conn = init_db()
     current_mode = "Autonomous"
     select_autonomous_mode(conn)
@@ -148,6 +145,7 @@ if __name__ == "__main__":
     time.sleep(1)
     scores_auto, total_auto = run_phase(conn, current_mode, duration=15, multipliers={
         "L1": 3,
+
         "L2": 4,
         "L3": 6,
         "L4": 7,
